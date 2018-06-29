@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Joseph Foti | <%= port.name %></title>
+
+    <link rel="stylesheet" href="../css/portfolio-<%= port.call %>.css">
+    <link rel="stylesheet" href="../css/nav.css">
+
+  </head>
+
+  <body>
+    <%- include partials/_nav.ejs %>
+
+    <h1 class="page-title"><%= port.name %></h1>
+
+    <div class="portfolio-wrapper">
+
+      <% for ( let i = 1 ; i < port.collection.length ; i++ )  { %>
+
+        <div class="port-item" data-index=<%= i %> >
+          <img class="port-image" src=<%=`../images/${port.call}/${port.collection[i]}`%> />
+        </div>
+
+      <% } %>
+
+    </div>
+
+  </body>
+
+  <footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.1/TweenMax.min.js"></script>
+    <script type="text/javascript" src="../scripts/portfolio-<%= port.call %>-animation.js"></script>
+
+  </footer>
+
+</html>
