@@ -15,7 +15,9 @@ const app = express();
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.urlencoded({
+  extended: false
+}))
 app.use(express.static('public'));
 
 
@@ -55,7 +57,6 @@ const Project = sequelize.define('project', {
 
 });
 
-sequelize.sync()
 
 // User.create({
 //
@@ -64,6 +65,7 @@ sequelize.sync()
 //
 // });
 
+sequelize.sync()
 
 
 // ----------------------------------------------------------------------------- PASSPORT JS INIT
@@ -126,16 +128,18 @@ passport.deserializeUser(function(id, cb) {
 // STORAGE OBJECT DEFINITION
 
 const storage = multer.diskStorage({
-destination: './public/images/development-portfolio',
-filename: (req, file, cb)=>{
-   cb(null, Date.now() + (file.originalname) );
-}
+  destination: './public/images/development-portfolio',
+  filename: (req, file, cb) => {   
+    cb(null, Date.now() + (file.originalname));
+  }
 })
 
 
 // UPLOAD PROCESS DEFINITION
 
-const upload = multer({storage: storage}).array('images')
+const upload = multer({
+  storage: storage
+}).array('images')
 
 
 
@@ -173,7 +177,9 @@ app.get('/portfolio/:type', (req, res) => {
       port.details = true;
     }
 
-    return res.render('portfolio', { port });
+    return res.render('portfolio', {
+      port
+    });
 
   });
 
@@ -181,24 +187,24 @@ app.get('/portfolio/:type', (req, res) => {
 
 })
 
-app.get('/portfolio/web-design/:projectName', (req,res)=>{
+app.get('/portfolio/web-design/:projectName', (req, res) => {
 
   let projectName = req.params.projectName;
   let port = {};
 
 
-  fs.readFile('./public/data/web-design-info.json', "utf-8", (err,data)=>{
+  fs.readFile('./public/data/web-design-info.json', "utf-8", (err, data) => {
 
 
     port.portData = JSON.parse(data)[projectName];
     port.name = port.portData.title;
 
-    fs.readdir('./public/images/web-design/detail-images', (err,files)=>{
+    fs.readdir('./public/images/web-design/detail-images', (err, files) => {
 
-      let images = files.filter(x=>{
-        let reg = new RegExp(x.slice(0,x.length-5));
+      let images = files.filter(x => {
+        let reg = new RegExp(x.slice(0, x.length - 5));
         console.log(reg);
-        if ( reg.test(projectName) ) {
+        if (reg.test(projectName)) {
 
           // Maybe add mobile images sorting?
 
@@ -206,10 +212,12 @@ app.get('/portfolio/web-design/:projectName', (req,res)=>{
         }
       })
 
-      port.originalImage = projectName+'.png';
+      port.originalImage = projectName + '.png';
       port.images = images;
 
-      return res.render('web-design-portfolio', {port});
+      return res.render('web-design-portfolio', {
+        port
+      });
 
     })
 
@@ -220,55 +228,102 @@ app.get('/portfolio/web-design/:projectName', (req,res)=>{
 
 });
 
-app.get('/front-end-development',(req,res)=>{
+app.get('/front-end-development', (req, res) => {
 
 
 
 })
 
-app.get('/admin', (req,res)=>{
+app.get('/admin', (req, res) => {
 
   res.render('login');
 
 });
 
-app.post('/login', passport.authenticate('local', {failureRedirect: '/login'}), (req,res)=>{
+app.post('/login', passport.authenticate('local', {
+  failureRedirect: '/admin'
+}), (req, res) => {
 
   res.redirect('/admin-dashboard')
 
 })
 
-app.get('/admin-dashboard', (req,res)=>{
+app.get('/admin-dashboard', (req, res) => {
 
   res.render('dashboard');
 
 });
 
-app.post('/add', (req,res)=>{
+app.post('/add', (req, res) => {
 
-  upload(req, res, (err)=>{
-    let order = req.body.order;
-    console.log(req.files);
+  upload(req, res, (err) => {
+    let order = req.body.order.split(',');
+
+    let images = req.files;
+    let text = req.body.text;
 
     let thisProject = {}
+    thisProject.thumbnail = req.body.images[0];
+
+    let thumbnailRelativePath = images[0].path.split('/');
+    thumbnailRelativePath.shift();
+    thumbnailRelativePath = thumbnailRelativePath.join('/');
+
+    thisProject.title = thumbnailRelativePath;
+
+
 
     let orderedElements = [];
 
     for (var i = 0; i < order.length; i++) {
-      if ( order[i] === 'img' ) {
-        let html = `<img src="${req.files[0].path}" class="dev-image" />`
-        req.files.shift();
-      } else {
-        let html = `<p class="dev-text">${req.body.text[0]}</p>`
+      let html = '';
+
+      if (order[i] === 'empty') {
+        console.log('was empty');
+        break;
       }
+
+      console.log(order[i]);
+      console.log(images[0]);
+      if (order[i] === 'img') {
+        let relativePath = images[0].path.split('/');
+        relativePath.shift();
+        relativePath = relativePath.join('/');
+        html = `<img src="${relativePath}" class="dev-image" />`
+        images.shift();
+      } else {
+
+        if (text) {
+          html = `<p class="dev-text">${ text[0] }</p>`
+          text.shift();
+        }
+
+      }
+      orderedElements.push(html);
     }
     // var x = '<div style="width:50px;height:50px;background-color:red"></div>';
     // var y = '<div style="width:50px;height:50px;background-color:blue"></div>';
     // var z = '<div style="width:50px;height:50px;background-color:green"></div>';
+    thisProject.content = orderedElements;
 
-    res.render('test',{orderedElements});
+    console.log(thisProject);
 
-  })
+    Project.insert({
+
+      title: thisProject.title,
+      thumbnail: thisProject.thumbnail,
+      content: thisProject.content
+
+    }).then(x=>{
+      console.log(x);
+      res.render('front-end-blog', {
+        orderedElements
+      });
+    })
+
+
+
+  });
 
 
 
