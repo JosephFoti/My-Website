@@ -1,0 +1,41 @@
+{
+  "quadPrep": {
+    "title": "Quad Preparatory School Website",
+    "year": "2018",
+    "description": "A website for Quad Prep, a K-12 school specializing in the education of 2e, Twice Exceptional, students. I was hired to redesign their entire website and build it out on Wix. Live site coming soon!"
+  },
+  "screenController": {
+    "title": "Lobby Gallery Screen Exhibition",
+    "year": "2018",
+    "description": "This project is a web application I built off of a BlackBaud, a content management system for education services, back end to be able to display dynamic events from our school calendar, dynamically display news from our weekly news updates and cycle through photographs of school events. Designed to fit a 16:9 plasma screen television in the school lobby."
+  },
+
+  "subwayplusplus": {
+    "title": "Subway++ MTA Subway Time Catcher",
+    "year": "2018",
+    "description": "Subway++ is a train time catcher based on the MTA Api providing users with live subway time information for all of the MTA lines including the Staten Island line. Users may also save their preferences to their account and build their own custom dashboard for subway information. Click <a href='https://subwayplusplus.herokuapp.com/' class='portfolio-link'>here</a> to check out the live demo."
+  },
+
+  "fbtn": {
+    "title": "Friends by the Numbers",
+    "year": "2017",
+    "description": "Friends by the numbers is a simple interactive exposition of facts about the school Friends Seminary. Check it out <a href='https://www.friendsseminary.org/page/about/friends-by-the-numbers' class='portfolio-link'>here</a> live and simply scroll down to see new facts cascading into view!"
+  },
+
+  "nmg": {
+    "title": "Ned McGregor Portfolio Website",
+    "year": "2017",
+    "description": "A portfolio for Cinematographer and Lighting Designer Ned McGregor: <i>Work In Progress</i>"
+  },
+
+  "cpej": {
+    "title": "The Center for Peace, Equity and Justice at Friends Seminary Blog",
+    "year": "2016",
+    "description": "The Center for Peace, Equity and Justice is a locus for many programs at the school, but focus mainly on the exploration of social justice issues. I designed and built this single page blog site to house their events, publications and tools. This page was designed to match the simplicity of the parent site, but to expand the identity of the Center and its constituant groups. Explore it live <a href='https://www.friendsseminary.org/page/about/center-for-peace-equity--justice/cpej-news-feed' class='portfolio-link'>here</a>."
+  },
+  "summerFriends": {
+    "title": "Summer Friends",
+    "year": "2016",
+    "description": "Summer Friends is a Wordpress based website for the summer camp run by Friends Seminary. The website functions as an information base and a portal for registration. Check out the full site <a href='http://www.summerfriendsnyc.org/' class='portfolio-link'>here</a>"
+  }
+}

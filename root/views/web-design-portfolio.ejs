@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Joseph Foti | <%= port.name %></title>
+
+    <link rel="stylesheet" href="../../css/web-design-project.css">
+    <link rel="stylesheet" href="../../css/nav.css">
+
+  </head>
+
+  <body>
+    <%- include partials/_nav.ejs %>
+
+    <h1 class="page-title"><%= port.name %></h1>
+
+    <div class="portfolio-wrapper">
+
+      <div class="portfolio-description-container">
+        <p class="portfolio-description"><%- port.portData.description %></p>
+      </div>
+
+      <div class="portfolio-gallery">
+        <% for (let image of port.images) { %>
+          <img class="portfolio-images" src="<%= '../../images/web-design/detail-images/' + image %>" alt="">
+        <% } %>
+      </div>
+
+    </div>
+
+  </body>
+
+  <footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.1/TweenMax.min.js"></script>
+    <script type="text/javascript" src="../scripts/web-design-project-animation.js"></script>
+
+  </footer>
+
+</html>

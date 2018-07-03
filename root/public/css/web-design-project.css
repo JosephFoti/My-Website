@@ -1,0 +1,41 @@
+body {
+  margin: 0px;
+  font-family: lato;
+}
+
+.page-title {
+    font-family: lato;
+    font-weight: 100;
+    line-height: 45px;
+    font-size: 30px;
+    padding-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-align: center;
+    margin: 0px;
+    padding-top: 20px;
+    color: black;
+    box-shadow: 0px 0px 1px 1px black;
+}
+
+.portfolio-gallery {
+    box-sizing: border-box;
+}
+
+img.portfolio-images {
+    width: 80%;
+    margin: 25px 10%;
+    box-shadow: 0px 0px 10px -1px #d0cfcf;
+}
+
+
+.portfolio-description-container {
+    width: 80%;
+    margin-left: 10%;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.portfolio-wrapper {
+    padding: 20px 30px;
+}

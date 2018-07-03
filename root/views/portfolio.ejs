@@ -16,11 +16,27 @@
 
     <div class="portfolio-wrapper">
 
-      <% for ( let i = 1 ; i < port.collection.length ; i++ )  { %>
+      <% if ( port.details ) { %>
 
-        <div class="port-item" data-index=<%= i %> >
-          <img class="port-image" src=<%=`../images/${port.call}/${port.collection[i]}`%> />
-        </div>
+        <% for ( let i = 1 ; i < port.collection.length-1 ; i++ )  { %>
+
+          <div class="port-item" data-index=<%= i %> >
+            <a href=<%=`./web-design/${port.collection[i].slice(1, port.collection[i].length-4)}`%> >
+            <img class="port-image" src=<%=`../images/${port.call}/${port.collection[i]}`%> />
+            </a>
+          </div>
+
+        <% } %>
+
+      <% } else { %>
+
+        <% for ( let i = 1 ; i < port.collection.length ; i++ )  { %>
+
+          <div class="port-item" data-index=<%= i %> >
+            <img class="port-image" src=<%=`../images/${port.call}/${port.collection[i]}`%> />
+          </div>
+
+        <% } %>
 
       <% } %>
 
