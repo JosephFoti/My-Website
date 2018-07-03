@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Dashboard</title>
+  </head>
+  <body>
+    <h1>Hello Joe!</h1>
+
+    <div class="dash-controller">
+      <button id="moreImg">Add additional image</button>
+      <button id="moreTxt">Add text feild</button>
+    </div>
+
+    <form id="dash-add" action="/add" method="post" enctype="multipart/form-data">
+      <label> Add title <input type="text" name="title" value="" required></label></br>
+      <label> Add main img <input type="file" name="images" value="" required/></label></br>
+      <input id="order" style="display:none;" type="text" name="order" value="empty"/>
+      <button type="submit" name="button">submit</button>
+    </form>
+
+  </body>
+  <footer>
+
+    <script type="text/javascript">
+
+      let moreImg = document.getElementById('moreImg');
+      let moreTxt = document.getElementById('moreTxt');
+
+      let form = document.getElementById('dash-add');
+
+      let order = document.getElementById('order');
+
+      let imgCounter = 0;
+      let txtCounter = 0;
+
+      var updateOrder = (newInput) => {
+
+        if (order.value === "empty") {
+          order.value = newInput
+        } else {
+          let arr = order.value.split(',');
+          arr.push(newInput);
+          order.value = arr.toString();
+        }
+
+      }
+
+      moreImg.addEventListener('click',function(){
+
+        let newImg = document.createElement('input');
+        let lineBreak = document.createElement('br');
+        newImg.className = "new-image";
+        newImg.setAttribute("name",`images`);
+        newImg.setAttribute("type","file");
+        form.appendChild(lineBreak);
+        form.appendChild(newImg);
+        // imgCounter++;
+        updateOrder('img');
+
+      });
+
+      moreTxt.addEventListener('click',function(){
+
+        let newTxt = document.createElement('textarea');
+        let lineBreak = document.createElement('br');
+        newTxt.className = "new-text";
+        newTxt.setAttribute("name",`additionalText`);
+        newTxt.setAttribute("type","text");
+        form.appendChild(lineBreak);
+        form.appendChild(newTxt);
+        // txtCounter++;
+        updateOrder('text');
+
+      });
+
+
+
+    </script>
+
+  </footer>
+</html>
