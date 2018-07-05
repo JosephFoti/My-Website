@@ -58,7 +58,6 @@ const Project = sequelize.define('project', {
 
 });
 
-sequelize.sync()
 
 // User.create({
 //
@@ -67,6 +66,7 @@ sequelize.sync()
 //
 // });
 
+sequelize.sync()
 
 
 // ----------------------------------------------------------------------------- PASSPORT JS INIT
@@ -341,7 +341,22 @@ app.post('/add', (req, res) => {
     });
 
 
-  })
+    Project.insert({
+
+      title: thisProject.title,
+      thumbnail: thisProject.thumbnail,
+      content: thisProject.content
+
+    }).then(x=>{
+      console.log(x);
+      res.render('front-end-blog', {
+        orderedElements
+      });
+    })
+
+
+
+  });
 
 
 })
