@@ -25,8 +25,6 @@ const result = dotenv.config();
 
 const PORT = process.env.PORT || 3000
 
-
-
 const Op = Sequelize.Op
 
 const sequelize = new Sequelize(process.env.DATABASE_URL,  {
