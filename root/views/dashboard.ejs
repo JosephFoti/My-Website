@@ -13,12 +13,30 @@
     </div>
 
     <form id="dash-add" action="/add" method="post" enctype="multipart/form-data">
-      <label> Add title <input type="text" name="title" value="" required></label></br>
+      <label> Add title <input type="text" name="title" value="" required /></label></br>
       <label> Add main img <input type="file" name="images" value="" required/></label></br>
+      <label> Add description <input type="text" name="text" value=""/></label>
       <input id="order" style="display:none;" type="text" name="order" value="empty"/>
       <button type="submit" name="button">submit</button>
     </form>
 
+    <br>
+    <br>
+    <hr>
+    <br>
+    <br>
+
+    <% if (projects.length>0) { %>
+      <% for (let item of projects) { %>
+        <div class="current-projects">
+        <h4><%= item.title %></h4>
+        <form class="dash-remove" action="/remove" method="post">
+          <input style="display:none;" name="id" value=<%= item.id %>>
+          <button type="submit">Remove</button>
+        </form>
+        </div>
+      <% } %>
+    <% } %>
   </body>
   <footer>
 
@@ -34,14 +52,19 @@
       let imgCounter = 0;
       let txtCounter = 0;
 
-      var updateOrder = (newInput) => {
+      order.value = "empty";
 
+      var updateOrder = (newInput) => {
+        console.log(order.value);
         if (order.value === "empty") {
-          order.value = newInput
+          order.value = newInput;
+          order.innerHTML =  newInput;
+
         } else {
           let arr = order.value.split(',');
           arr.push(newInput);
           order.value = arr.toString();
+          order.innerHTML =  arr.toString();
         }
 
       }

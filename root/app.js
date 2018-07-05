@@ -15,7 +15,9 @@ const app = express();
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.urlencoded({
+  extended: false
+}))
 app.use(express.static('public'));
 
 
@@ -49,8 +51,9 @@ const User = sequelize.define('user', {
 
 const Project = sequelize.define('project', {
 
-  title: Sequelize.STRING,
-  thumbnail: Sequelize.STRING,
+  title: Sequelize.STRING(10000),
+  thumbnail: Sequelize.STRING(10000),
+  description: Sequelize.STRING(10000),
   content: Sequelize.JSON
 
 });
@@ -126,16 +129,18 @@ passport.deserializeUser(function(id, cb) {
 // STORAGE OBJECT DEFINITION
 
 const storage = multer.diskStorage({
-destination: './public/images/development-portfolio',
-filename: (req, file, cb)=>{
-   cb(null, Date.now() + (file.originalname) );
-}
+  destination: './public/images/development-portfolio',
+  filename: (req, file, cb) => {   
+    cb(null, Date.now() + (file.originalname));
+  }
 })
 
 
 // UPLOAD PROCESS DEFINITION
 
-const upload = multer({storage: storage}).array('images')
+const upload = multer({
+  storage: storage
+}).array('images')
 
 
 
@@ -173,7 +178,9 @@ app.get('/portfolio/:type', (req, res) => {
       port.details = true;
     }
 
-    return res.render('portfolio', { port });
+    return res.render('portfolio', {
+      port
+    });
 
   });
 
@@ -181,24 +188,24 @@ app.get('/portfolio/:type', (req, res) => {
 
 })
 
-app.get('/portfolio/web-design/:projectName', (req,res)=>{
+app.get('/portfolio/web-design/:projectName', (req, res) => {
 
   let projectName = req.params.projectName;
   let port = {};
 
 
-  fs.readFile('./public/data/web-design-info.json', "utf-8", (err,data)=>{
+  fs.readFile('./public/data/web-design-info.json', "utf-8", (err, data) => {
 
 
     port.portData = JSON.parse(data)[projectName];
     port.name = port.portData.title;
 
-    fs.readdir('./public/images/web-design/detail-images', (err,files)=>{
+    fs.readdir('./public/images/web-design/detail-images', (err, files) => {
 
-      let images = files.filter(x=>{
-        let reg = new RegExp(x.slice(0,x.length-5));
+      let images = files.filter(x => {
+        let reg = new RegExp(x.slice(0, x.length - 5));
         console.log(reg);
-        if ( reg.test(projectName) ) {
+        if (reg.test(projectName)) {
 
           // Maybe add mobile images sorting?
 
@@ -206,10 +213,12 @@ app.get('/portfolio/web-design/:projectName', (req,res)=>{
         }
       })
 
-      port.originalImage = projectName+'.png';
+      port.originalImage = projectName + '.png';
       port.images = images;
 
-      return res.render('web-design-portfolio', {port});
+      return res.render('web-design-portfolio', {
+        port
+      });
 
     })
 
@@ -220,58 +229,132 @@ app.get('/portfolio/web-design/:projectName', (req,res)=>{
 
 });
 
-app.get('/front-end-development',(req,res)=>{
+app.get('/front-end-development', (req, res) => {
 
+  Project.findAll().then(x=>{
 
+    res.render('test',{projects:x});
+
+  })
 
 })
 
-app.get('/admin', (req,res)=>{
+app.get('/admin', (req, res) => {
 
   res.render('login');
 
 });
 
-app.post('/login', passport.authenticate('local', {failureRedirect: '/login'}), (req,res)=>{
+app.post('/login', passport.authenticate('local', {
+  failureRedirect: '/login'
+}), (req, res) => {
 
   res.redirect('/admin-dashboard')
 
 })
 
-app.get('/admin-dashboard', (req,res)=>{
+app.get('/admin-dashboard', (req, res) => {
 
-  res.render('dashboard');
+  let projects = [];
+
+  // get all current projects for editing and deletion controll on dashboard
+  Project.findAll().then(project => {
+
+    for (let item of project) {
+
+      let breif = {};
+      breif.title = item.dataValues.title;
+      breif.thumb = item.dataValues.thumbnail;
+      breif.id = item.dataValues.id;
+      projects.push(breif);
+
+    }
+    console.log(projects);
+    res.render('dashboard', {
+      projects
+    });
+
+  });
+
 
 });
 
-app.post('/add', (req,res)=>{
+app.post('/add', (req, res) => {
 
-  upload(req, res, (err)=>{
-    let order = req.body.order;
-    console.log(req.files);
+  upload(req, res, (err) => {
 
-    let thisProject = {}
+
+    let order = req.body.order.split(',');
+    let imageFiles = req.files;
+    let additionalText = req.body.additionalText;
 
     let orderedElements = [];
 
-    for (var i = 0; i < order.length; i++) {
-      if ( order[i] === 'img' ) {
-        let html = `<img src="${req.files[0].path}" class="dev-image" />`
-        req.files.shift();
-      } else {
-        let html = `<p class="dev-text">${req.body.text[0]}</p>`
-      }
-    }
-    // var x = '<div style="width:50px;height:50px;background-color:red"></div>';
-    // var y = '<div style="width:50px;height:50px;background-color:blue"></div>';
-    // var z = '<div style="width:50px;height:50px;background-color:green"></div>';
+    let thumbnail = imageFiles[0].path.split('/');
+    thumbnail.shift();
+    thumbnail = thumbnail.join('/');
+    imageFiles.shift();
 
-    res.render('test',{orderedElements});
+    let desc = req.body.text;
+
+    // Additional text / image parser
+    // takes the order input which contains demarcations for the order of text vs.
+    // image fields and allows for flexibility in building posts.
+    for (var i = 0; i < order.length; i++) {
+      let html;
+      if (order[i] === 'img') {
+        let relativePath = imageFiles[0].path.split('/');
+        relativePath.shift();
+        relativePath = relativePath.join('/');
+
+        html = `<img src="${relativePath}" class="dev-image" />`
+        if (typeof imageFiles == "object") imageFiles.shift();
+
+      } else if (order[i] === 'text') {
+
+        if (typeof additionalText == "object") {
+          console.log(additionalText[0]);
+          html = `<p class="dev-text">${additionalText[0]}</p>`
+          additionalText.shift();
+          console.log(additionalText);
+        } else {
+          html = `<p class="dev-text">${additionalText}</p>`
+        }
+
+      }
+      if (html) {
+        orderedElements.push(html);
+      }
+
+    }
+
+    Project.create({
+
+      title: req.body.title,
+      thumbnail: thumbnail,
+      description: desc,
+      content: orderedElements
+
+    }).then(project => {
+      console.log(project);
+      res.redirect('/admin-dashboard');
+    });
+
 
   })
 
 
+})
 
+app.post('/remove', (req, res) => {
+
+  Project.destroy({
+    where: {
+      id: parseInt(req.body.id)
+    }
+  }).then( ()=>{
+    res.redirect('/admin-dashboard');
+  });
 
 })
 

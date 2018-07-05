@@ -1,5 +1,37 @@
-<div class="wrapper">
-  <% for (el of orderedElements) { %>
-    <%- el %>
-  <% } %>
-</div>
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Joseph Foti | Front End Development</title>
+
+    <link rel="stylesheet" href="./css/nav.css">
+    <link rel="stylesheet" href="./css/portfolio-front-end-development.css">
+
+
+  </head>
+  <body>
+
+    <%- include partials/_nav.ejs %>
+
+    <div class="project-wrapper">
+
+        <% for (project of projects) { %>
+        <div class="project-single">
+
+          <h1 class="project-title"><%= project.title %></h1>
+          <img class="project-lead-image" src=<%= project.thumbnail %> />
+          <p class="project-lead-description"><%= project.description %></p>
+          <% for (el of project.content) { %>
+            <%- el %>
+          <% } %>
+
+        </div>
+        <hr>
+        <% } %>
+
+    </div>
+
+
+  </body>
+</html>
