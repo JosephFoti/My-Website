@@ -151,7 +151,9 @@ p {
 }
 
 
-
+h1.title {
+    letter-spacing: 0px;
+}
 
 
 
@@ -171,9 +173,24 @@ p {
     width: 80%;
     max-height: 90px;
   }
-  .portCon {
-    margin-top: 0px !important;
-    margin-bottom: 0px !important;
+
+  img.logo {
+      margin-top: 10px;
   }
+
+  h1.title {
+      text-align: left;
+      letter-spacing: 0px;
+  }
+
+  .port-container-main {
+      width: 100%;
+      margin: 0px;
+  }
+
+  .port-container {
+      width: 100%;
+  }
+
 
 }
