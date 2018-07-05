@@ -21,23 +21,29 @@ app.use(bodyParser.urlencoded({
 }))
 app.use(express.static('public'));
 
+const result = dotenv.config();
+
+const PORT = process.env.PORT || 3000
+
+
 
 const Op = Sequelize.Op
 
-const sequelize = new Sequelize('fauxbase', 'postgres', 'Giraffes94', {
+const sequelize = new Sequelize(process.env.DATABASE_URL,  {
 
-  // host: 'localhost',
-  // port: '5432',
-  dialect: 'postgres',
-  operatorsAliases: {
-    $and: Op.and,
-    $or: Op.or,
-    $eq: Op.eq,
-    $regexp: Op.regexp,
-    $iRegexp: Op.iRegexp,
-    $like: Op.like,
-    $iLike: Op.iLike
-  }
+	logging: true,
+	ssl: true,
+	dialect: 'postgres',
+	protocol: 'postgres',
+	operatorsAliases:{
+		$and: Op.and,
+		$or: Op.or,
+		$eq: Op.eq,
+		$regexp: Op.regexp,
+		$iRegexp: Op.iRegexp,
+		$like: Op.like,
+		$iLike: Op.iLike
+	}
 })
 
 
@@ -381,6 +387,6 @@ app.post('/remove', (req, res) => {
 
 
 
-app.listen(8080, function() {
+app.listen(PORT, function() {
   console.log('joe!');
 })
